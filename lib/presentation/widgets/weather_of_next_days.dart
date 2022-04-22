@@ -17,7 +17,7 @@ class WeatherOfNextDaysWidget extends StatelessWidget {
               child: CircularProgressIndicator(color: Colors.purpleAccent),
             );
           } else if (snapshot.hasData) {
-            return ViewForecastDailyDataWidget();
+            return const ViewForecastDailyDataWidget();
           } else {
             return const Center(
               child: Text('No data'),
