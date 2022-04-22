@@ -17,12 +17,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late final model;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    model = context.read<HomePageModel>().getWeather();
+
+    context.read<HomePageModel>().getData();
   }
 
   @override
@@ -31,7 +30,7 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Scaffold(
         body: CustomBackgroundGradientColor(
           child: FutureBuilder(
-            future: model,
+            future: context.read<HomePageModel>().getWeather(),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(

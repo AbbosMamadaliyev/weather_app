@@ -9,6 +9,29 @@ class WeatherOfNextDaysWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: context.read<HomePageModel>().getForecastDaily(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.purpleAccent),
+            );
+          } else if (snapshot.hasData) {
+            return ViewForecastDailyDataWidget();
+          } else {
+            return const Center(
+              child: Text('No data'),
+            );
+          }
+        });
+  }
+}
+
+class ViewForecastDailyDataWidget extends StatelessWidget {
+  const ViewForecastDailyDataWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     final model = context.watch<HomePageModel>();
 
     final forecast = model.forecastDaily;
@@ -79,6 +102,7 @@ class _ForecastDailyCard extends StatelessWidget {
   final String day;
   final String url;
   final int temp;
+
   const _ForecastDailyCard(
       {Key? key, required this.url, required this.day, required this.temp})
       : super(key: key);

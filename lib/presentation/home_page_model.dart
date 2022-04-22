@@ -20,11 +20,14 @@ class HomePageModel extends ChangeNotifier {
   String todayDate = '';
   String _cityName = 'tashkent';
 
-  Future<WeatherEntity> getWeather() async {
+  void getData() {
     _getTodayDate();
-    _getForecastDaily();
+    // getForecastDaily();
     _getNextDays();
+    // getWeather();
+  }
 
+  Future<WeatherEntity> getWeather() async {
     weatherEntity = await _weatherRepositoryImpl.getWeather(_cityName);
     notifyListeners();
     return weatherEntity;
@@ -35,7 +38,7 @@ class HomePageModel extends ChangeNotifier {
     _cityName = searchController.text;
     notifyListeners();
 
-    getWeather();
+    getData();
   }
 
   String url(String icon) => _imageUrlRepository.getImg(icon);
@@ -56,10 +59,11 @@ class HomePageModel extends ChangeNotifier {
     print(nextDays);
   }
 
-  Future<ForecastDailyEntity> _getForecastDaily() async {
+  Future<ForecastDailyEntity> getForecastDaily() async {
     forecastDaily =
         await _forecastDailyRepositoryImpl.getForecastDaily(_cityName);
     notifyListeners();
+    print(forecastDaily.list.length);
     return forecastDaily;
   }
 }
