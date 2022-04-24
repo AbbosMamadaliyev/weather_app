@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/src/provider.dart';
-import 'package:weather_app/presentation/home_page_model.dart';
+import 'package:weather_app/presentation/blocs/weather_bloc/weather_bloc.dart';
 
 class WeatherOfNextDaysWidget extends StatelessWidget {
   const WeatherOfNextDaysWidget({
@@ -9,34 +10,6 @@ class WeatherOfNextDaysWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: context.read<HomePageModel>().getForecastDaily(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(color: Colors.purpleAccent),
-            );
-          } else if (snapshot.hasData) {
-            return ViewForecastDailyDataWidget();
-          } else {
-            return const Center(
-              child: Text('No data'),
-            );
-          }
-        });
-  }
-}
-
-class ViewForecastDailyDataWidget extends StatelessWidget {
-  const ViewForecastDailyDataWidget({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final model = context.watch<HomePageModel>();
-
-    final forecast = model.forecastDaily;
-    final nextDays = model.nextDays;
-
     return Expanded(
       flex: 3,
       child: Container(
@@ -57,42 +30,76 @@ class ViewForecastDailyDataWidget extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 16),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-                child: Row(
-                  children: [
-                    _ForecastDailyCard(
-                      url: model.url(forecast.list[8].weather[0].icon),
-                      day: nextDays[0],
-                      temp: forecast.list[8].main.temp.toInt(),
-                    ),
-                    _ForecastDailyCard(
-                      url: model.url(forecast.list[17].weather[0].icon),
-                      day: nextDays[1],
-                      temp: forecast.list[17].main.temp.toInt(),
-                    ),
-                    _ForecastDailyCard(
-                      url: model.url(forecast.list[25].weather[0].icon),
-                      day: nextDays[2],
-                      temp: forecast.list[25].main.temp.toInt(),
-                    ),
-                    _ForecastDailyCard(
-                      url: model.url(forecast.list[32].weather[0].icon),
-                      day: nextDays[3],
-                      temp: forecast.list[32].main.temp.toInt(),
-                    ),
-                    _ForecastDailyCard(
-                      url: model.url(forecast.list[39].weather[0].icon),
-                      day: nextDays[4],
-                      temp: forecast.list[39].main.temp.toInt(),
-                    ),
-                  ],
-                ),
-              ),
+              ViewForecastDailyDataWidget(),
+              /* BlocBuilder<WeatherBloc, WeatherState>(builder: (context, state) {
+                if (state is WeatherLoadingState) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                        color: Colors.purpleAccent),
+                  );
+                } else if (state is WeatherLoadedState) {
+                  return const ViewForecastDailyDataWidget();
+                } else {
+                  return const Center(
+                    child: Text('No data'),
+                  );
+                }
+              }),*/
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ViewForecastDailyDataWidget extends StatelessWidget {
+  const ViewForecastDailyDataWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // final model = context.watch<HomePageModel>();
+    final state = context.watch<WeatherBloc>().state as WeatherLoadedState;
+
+    final forecast = state.forecastDailyEntity;
+    // final nextDays = model.nextDays;
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      child: Row(
+        children: [
+          _ForecastDailyCard(
+            url: state.imageUrlRepository
+                .getImg(forecast.list[8].weather[0].icon),
+            day: 'nextDays[0]',
+            temp: forecast.list[8].main.temp.toInt(),
+          ),
+          _ForecastDailyCard(
+            url: state.imageUrlRepository
+                .getImg(forecast.list[17].weather[0].icon),
+            day: 'nextDays[1]',
+            temp: forecast.list[17].main.temp.toInt(),
+          ),
+          _ForecastDailyCard(
+            url: state.imageUrlRepository
+                .getImg(forecast.list[25].weather[0].icon),
+            day: 'nextDays[2]',
+            temp: forecast.list[25].main.temp.toInt(),
+          ),
+          _ForecastDailyCard(
+            url: state.imageUrlRepository
+                .getImg(forecast.list[32].weather[0].icon),
+            day: 'nextDays[3]',
+            temp: forecast.list[32].main.temp.toInt(),
+          ),
+          _ForecastDailyCard(
+            url: state.imageUrlRepository
+                .getImg(forecast.list[39].weather[0].icon),
+            day: 'nextDays[4]',
+            temp: forecast.list[39].main.temp.toInt(),
+          ),
+        ],
       ),
     );
   }

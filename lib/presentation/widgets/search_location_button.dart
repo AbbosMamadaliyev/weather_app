@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
-import 'package:weather_app/presentation/home_page_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../blocs/weather_bloc/weather_bloc.dart';
 
 class SearchLocationButton extends StatelessWidget {
   const SearchLocationButton({
@@ -9,8 +10,6 @@ class SearchLocationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<HomePageModel>();
-
     return Expanded(
       flex: 1,
       child: Align(
@@ -18,8 +17,7 @@ class SearchLocationButton extends StatelessWidget {
         child: IconButton(
           padding: const EdgeInsets.only(right: 20),
           onPressed: () {
-            model.searchController.clear();
-            _showSearchDialog(context, model);
+            _showSearchDialog(context);
           },
           icon: const Icon(
             Icons.search,
@@ -30,7 +28,9 @@ class SearchLocationButton extends StatelessWidget {
     );
   }
 
-  Future<dynamic> _showSearchDialog(BuildContext context, HomePageModel model) {
+  Future<dynamic> _showSearchDialog(BuildContext context) {
+    final searchController = TextEditingController();
+
     return showDialog(
         context: context,
         builder: (context) {
@@ -40,12 +40,16 @@ class SearchLocationButton extends StatelessWidget {
             title: const Text('Search location'),
             content: TextField(
               autofocus: true,
-              controller: model.searchController,
+              controller: searchController,
             ),
             actions: [
               TextButton(
                 onPressed: () {
-                  model.searchByCityName();
+                  context
+                      .read<WeatherBloc>()
+                      .add(SearchCityEvent(searchController.text));
+
+                  searchController.clear();
                   Navigator.of(context).pop();
                 },
                 child: const Text('search'),

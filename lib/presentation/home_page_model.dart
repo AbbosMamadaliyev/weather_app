@@ -22,9 +22,9 @@ class HomePageModel extends ChangeNotifier {
 
   void getData() {
     _getTodayDate();
-    // getForecastDaily();
+    getForecastDaily();
     _getNextDays();
-    // getWeather();
+    getWeather();
   }
 
   Future<WeatherEntity> getWeather() async {

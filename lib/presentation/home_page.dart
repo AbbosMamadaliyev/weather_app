@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/src/provider.dart';
-import 'package:weather_app/presentation/home_page_model.dart';
+import 'package:weather_app/presentation/blocs/weather_bloc/weather_bloc.dart';
 import 'package:weather_app/presentation/widgets/custom_background_gradient_color.dart';
 import 'package:weather_app/presentation/widgets/date_and_location_widget.dart';
 import 'package:weather_app/presentation/widgets/search_location_button.dart';
@@ -21,7 +22,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    context.read<HomePageModel>().getData();
+    context.read<WeatherBloc>().add(FetchWeatherEvent());
   }
 
   @override
@@ -29,20 +30,21 @@ class _MyHomePageState extends State<MyHomePage> {
     return SafeArea(
       child: Scaffold(
         body: CustomBackgroundGradientColor(
-          child: FutureBuilder(
-            future: context.read<HomePageModel>().getWeather(),
-            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(color: Colors.purpleAccent),
-                );
-              } else if (snapshot.hasData) {
-                return const ViewDataWidget();
-              } else {
-                return const Center(
-                  child: Text('No data'),
-                );
+          child: BlocBuilder<WeatherBloc, WeatherState>(
+            builder: (BuildContext context, state) {
+              if (state is WeatherLoadingState) {
+                return const Center(child: CircularProgressIndicator());
               }
+
+              if (state is WeatherLoadedState) {
+                return const ViewDataWidget();
+              }
+
+              if (state is WeatherErrorState) {
+                return Center(child: Text(state.message));
+              }
+
+              return const Center(child: Text('error'));
             },
           ),
         ),
@@ -57,8 +59,8 @@ class ViewDataWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      // mainAxisSize: MainAxisSize.min,
+      // crossAxisAlignment: CrossAxisAlignment.center,
       children: const [
         SearchLocationButton(),
         DateAndLocationWidget(),

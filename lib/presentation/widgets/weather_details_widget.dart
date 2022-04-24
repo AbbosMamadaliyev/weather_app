@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 
-import '../home_page_model.dart';
+import '../blocs/weather_bloc/weather_bloc.dart';
 
 class WeatherDetailsWidget extends StatelessWidget {
   const WeatherDetailsWidget({
@@ -10,7 +10,8 @@ class WeatherDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final weather = context.watch<HomePageModel>().weatherEntity;
+    final state = context.watch<WeatherBloc>().state as WeatherLoadedState;
+    final weather = state.weatherEntity;
 
     return Expanded(
       flex: 2,

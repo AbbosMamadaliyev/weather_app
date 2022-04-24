@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 
-import '../home_page_model.dart';
+import '../blocs/weather_bloc/weather_bloc.dart';
 
 class DateAndLocationWidget extends StatelessWidget {
   const DateAndLocationWidget({
@@ -10,8 +10,10 @@ class DateAndLocationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<HomePageModel>();
-    final weather = model.weatherEntity;
+    // final model = context.watch<HomePageModel>();
+    // final weather = model.weatherEntity;
+    final state = context.watch<WeatherBloc>().state as WeatherLoadedState;
+    final weatherEntity = state.weatherEntity;
 
     return Expanded(
       flex: 1,
@@ -20,7 +22,7 @@ class DateAndLocationWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Today, ${model.todayDate}',
+              'Today, {model.todayDate}',
               style: const TextStyle(color: Colors.white),
             ),
             const Text(
@@ -32,7 +34,7 @@ class DateAndLocationWidget extends StatelessWidget {
               ),
             ),
             Text(
-              weather.name,
+              weatherEntity.name,
               style: const TextStyle(color: Colors.white),
             ),
           ],
