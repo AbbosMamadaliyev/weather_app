@@ -10,8 +10,6 @@ class DateAndLocationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final model = context.watch<HomePageModel>();
-    // final weather = model.weatherEntity;
     final state = context.watch<WeatherBloc>().state as WeatherLoadedState;
     final weatherEntity = state.weatherEntity;
 
@@ -22,7 +20,7 @@ class DateAndLocationWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Today, {model.todayDate}',
+              'Today, ${state.todayDate}',
               style: const TextStyle(color: Colors.white),
             ),
             const Text(

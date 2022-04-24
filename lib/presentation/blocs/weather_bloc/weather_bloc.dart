@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
 import 'package:weather_app/data/repositories/forecast_daily_repository_impl.dart';
 import 'package:weather_app/data/repositories/weather_repository_impl.dart';
 import 'package:weather_app/domain/entities/forecast_daily_entity.dart';

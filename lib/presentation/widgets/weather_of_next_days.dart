@@ -24,27 +24,13 @@ class WeatherOfNextDaysWidget extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
+            children: const [
+              Text(
                 'The next 5 days',
                 style: TextStyle(fontWeight: FontWeight.w700),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               ViewForecastDailyDataWidget(),
-              /* BlocBuilder<WeatherBloc, WeatherState>(builder: (context, state) {
-                if (state is WeatherLoadingState) {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                        color: Colors.purpleAccent),
-                  );
-                } else if (state is WeatherLoadedState) {
-                  return const ViewForecastDailyDataWidget();
-                } else {
-                  return const Center(
-                    child: Text('No data'),
-                  );
-                }
-              }),*/
             ],
           ),
         ),
@@ -58,11 +44,8 @@ class ViewForecastDailyDataWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final model = context.watch<HomePageModel>();
     final state = context.watch<WeatherBloc>().state as WeatherLoadedState;
-
     final forecast = state.forecastDailyEntity;
-    // final nextDays = model.nextDays;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -72,31 +55,31 @@ class ViewForecastDailyDataWidget extends StatelessWidget {
           _ForecastDailyCard(
             url: state.imageUrlRepository
                 .getImg(forecast.list[8].weather[0].icon),
-            day: 'nextDays[0]',
+            day: state.nextDays[0],
             temp: forecast.list[8].main.temp.toInt(),
           ),
           _ForecastDailyCard(
             url: state.imageUrlRepository
                 .getImg(forecast.list[17].weather[0].icon),
-            day: 'nextDays[1]',
+            day: state.nextDays[1],
             temp: forecast.list[17].main.temp.toInt(),
           ),
           _ForecastDailyCard(
             url: state.imageUrlRepository
                 .getImg(forecast.list[25].weather[0].icon),
-            day: 'nextDays[2]',
+            day: state.nextDays[2],
             temp: forecast.list[25].main.temp.toInt(),
           ),
           _ForecastDailyCard(
             url: state.imageUrlRepository
                 .getImg(forecast.list[32].weather[0].icon),
-            day: 'nextDays[3]',
+            day: state.nextDays[3],
             temp: forecast.list[32].main.temp.toInt(),
           ),
           _ForecastDailyCard(
             url: state.imageUrlRepository
                 .getImg(forecast.list[39].weather[0].icon),
-            day: 'nextDays[4]',
+            day: state.nextDays[4],
             temp: forecast.list[39].main.temp.toInt(),
           ),
         ],
@@ -124,7 +107,7 @@ class _ForecastDailyCard extends StatelessWidget {
         children: [
           Text(day),
           Container(
-            height: 80,
+            height: 85,
             width: 75,
             margin: const EdgeInsets.only(top: 8),
             decoration: BoxDecoration(

@@ -14,11 +14,35 @@ class WeatherLoadedState extends WeatherState {
   ForecastDailyEntity forecastDailyEntity;
   ImageUrlRepository imageUrlRepository;
 
+  final now = DateTime.now();
+  String todayDate = '';
+  List<String> nextDays = [];
+
   WeatherLoadedState(
-      this.weatherEntity, this.forecastDailyEntity, this.imageUrlRepository);
+      this.weatherEntity, this.forecastDailyEntity, this.imageUrlRepository) {
+    _getNextDays();
+  }
+
+  void _getNextDays() {
+    final formatDate = DateFormat('MMMM dd, yyyy').format(now);
+    todayDate = formatDate;
+
+    nextDays.clear();
+    var month = DateFormat('MMM').format(now);
+    var today = int.parse(DateFormat('dd').format(now));
+    for (int i = 1; i < 6; i++) {
+      today++;
+      nextDays.add('${today.toString()}-$month');
+    }
+    print(nextDays);
+  }
 
   @override
-  List<Object> get props => [weatherEntity, forecastDailyEntity];
+  List<Object> get props => [
+        weatherEntity,
+        forecastDailyEntity,
+        imageUrlRepository,
+      ];
 }
 
 class WeatherErrorState extends WeatherState {
