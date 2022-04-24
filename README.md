@@ -4,8 +4,12 @@ A new Flutter application.
 
 ## Getting Started
 
-weather app with BLoC and clean arch
-
+Weather app with 
+ - BLoC 
+ - clean arch
+ - dio
+ 
+ 
 screen:
 
 ![](sc1.png)
